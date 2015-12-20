@@ -266,12 +266,12 @@ trait RevisionableTrait
     public function getUserId()
     {
         try {
-            if (class_exists($class = '\Cartalyst\Sentry\Facades\Laravel\Sentry')
+            if (\Auth::check()) {
+                return \Auth::user()->getAuthIdentifier();
+            } elseif (class_exists($class = '\Cartalyst\Sentry\Facades\Laravel\Sentry')
                 || class_exists($class = '\Cartalyst\Sentinel\Laravel\Facades\Sentinel')
             ) {
                 return ($class::check()) ? $class::getUser()->id : null;
-            } elseif (\Auth::check()) {
-                return \Auth::user()->getAuthIdentifier();
             }
         } catch (\Exception $e) {
             return null;
